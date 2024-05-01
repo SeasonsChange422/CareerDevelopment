@@ -19,5 +19,18 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
+    '//': RouteRecordInfo<'//', '/', Record<never, never>, Record<never, never>>,
+    '//career': RouteRecordInfo<'//career', '/career', Record<never, never>, Record<never, never>>,
+    '//cultural': RouteRecordInfo<'//cultural', '/cultural', Record<never, never>, Record<never, never>>,
+    '//culturalPost': RouteRecordInfo<'//culturalPost', '/culturalPost', Record<never, never>, Record<never, never>>,
+    '//post': RouteRecordInfo<'//post', '/post', Record<never, never>, Record<never, never>>,
+    '//posts': RouteRecordInfo<'//posts', '/posts', Record<never, never>, Record<never, never>>,
+    '//profile': RouteRecordInfo<'//profile', '/profile', Record<never, never>, Record<never, never>>,
+    '//test': RouteRecordInfo<'//test', '/test', Record<never, never>, Record<never, never>>,
+    '/admin': RouteRecordInfo<'/admin', '/admin', Record<never, never>, Record<never, never>>,
+    '/admin/career': RouteRecordInfo<'/admin/career', '/admin/career', Record<never, never>, Record<never, never>>,
+    '/admin/post': RouteRecordInfo<'/admin/post', '/admin/post', Record<never, never>, Record<never, never>>,
+    '/admin/psychological': RouteRecordInfo<'/admin/psychological', '/admin/psychological', Record<never, never>, Record<never, never>>,
+    '/admin/user': RouteRecordInfo<'/admin/user', '/admin/user', Record<never, never>, Record<never, never>>,
   }
 }

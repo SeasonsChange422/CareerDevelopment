@@ -1,0 +1,17 @@
+.center{
+    position: relative;
+    width: 1200px;
+    min-height: 100vh;
+    margin: auto;
+    padding-top: 20px;
+}
+
+.postList{
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 40px;
+}

@@ -1,0 +1,51 @@
+.login{
+    position: relative;
+    height: 56px;
+    margin-left: auto;
+}
+.user{
+    position: relative;
+    height: 56px;
+}
+.btn{
+    position: relative;
+    top: 50%;
+    transform: translate(0,-50%);
+    height: 36px;
+    padding: 0 14px;
+    line-height: 36px;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    background-image: linear-gradient(to right,rgba(0,220,188),rgba(0,220,153));
+}
+.btn:hover{
+    background-image: linear-gradient(to right,rgba(0,197,164),rgba(0,197,137));
+}
+.userLogin{
+    min-height: 250px;
+}
+.v-window-item{
+    padding: 10px;
+}
+.avatar{
+    position: relative;
+    top: 50%;
+    transform: translate(0,-50%);
+    cursor: pointer;
+}
+.user:hover > .userBox {
+    height: auto;
+}
+.userBox {
+    position: absolute;
+    height: 0;
+    top: 56px;
+    width: 150px;
+    transform: translate(-40%);
+    transition: all 0.5s;
+}
+.userBox:hover{
+    height: auto;
+}

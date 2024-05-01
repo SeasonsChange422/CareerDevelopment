@@ -7,9 +7,20 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AddPost: typeof import('./components/AddPost.vue')['default']
     AppFooter: typeof import('./components/AppFooter.vue')['default']
+    AppHeader: typeof import('./components/AppHeader.vue')['default']
+    CommentComponent: typeof import('./components/commentComponent.vue')['default']
+    CommentsComponent: typeof import('./components/commentsComponent.vue')['default']
+    Editor: typeof import('./components/editor.vue')['default']
+    EditorComponent: typeof import('./components/editorComponent.vue')['default']
+    EditQuiz: typeof import('./components/editQuiz.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    Navigation: typeof import('./components/Navigation.vue')['default']
+    PostCard: typeof import('./components/postCard.vue')['default']
+    PostCardLite: typeof import('./components/postCard-lite.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UserStatus: typeof import('./components/UserStatus.vue')['default']
   }
 }

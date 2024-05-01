@@ -1,0 +1,31 @@
+.center{
+    position: relative;
+    width: 1200px;
+    min-height: 100vh;
+    margin: auto;
+    padding-top: 20px;
+}
+.typeContainer{
+    position: relative;
+    width: 100%;
+    min-height: 150px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+}
+.postsContainer{
+    position: relative;
+    width: 100%;
+    min-height: 200px;
+    background-color: white;
+    margin-top: 40px;
+    border-radius: 20px;
+    padding: 20px;
+}
+.chip{
+    margin: 5px;
+}
+.chip:hover{
+    cursor: pointer;
+    background-color: rgb(205, 238, 227);
+}

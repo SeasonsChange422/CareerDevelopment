@@ -1,3 +1,9 @@
+/*
+ * @Author: Dhx
+ * @Date: 2024-04-26 16:22:48
+ * @Description: 
+ * @FilePath: \CareerDevelopment\src\plugins\index.ts
+ */
 /**
  * plugins/index.ts
  *
