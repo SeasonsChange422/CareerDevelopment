@@ -4,7 +4,7 @@
             <template v-slot:title="{ item }">
                 {{ item.title.toUpperCase() }}
             </template>
-        </v-breadcrumbs> -->
+</v-breadcrumbs> -->
         <div class="center">
             <div class="row">
                 <p class="label text-h6" style="display: inline-block;">头像：</p>
@@ -23,7 +23,7 @@
             </div>
             <div class="row">
                 <p class="label text-h6">性别：</p>
-                <p class="label text-h6" v-if="!isEdit">{{ user.sex == '1' ? '男' : user.sex == '0' ? '女' : '' }}</p>
+                <p class="label text-h6" v-if="!isEdit">{{ user.sex }}</p>
                 <v-select v-model="updateInfo.sex" v-else :items="sexOptions" item-title="label" item-value="value"
                     label="Select" persistent-hint single-line></v-select>
             </div>
@@ -62,161 +62,138 @@
             </div>
         </div>
     </div>
+    <v-snackbar v-model="message.model" :color="message.color" :timeout="message.timeout">
+        {{ message.text }}
+    </v-snackbar>
 </template>
-<script lang="ts">
-// @ts-
-import { getUserInfo, updateUserInfo, uploadAvatar } from '../../api/api/userApi';
+<script lang="ts" setup>
+import { getUserInfo, updateUserInfo, uploadAvatar } from '@/api/api/userApi.ts';
 import { userInfo } from '@/api/type/userType';
 import { useUserStore } from '@/stores/user.ts'
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const userStore = useUserStore()
-
-export default {
-    name: 'flowers',
-    data() {
-        return {
-            tab: 0,
-            items: [
-                {
-                    title: '首页',
-                    disabled: false,
-                    href: '/',
-                },
-                {
-                    title: '个人主页',
-                    disabled: true,
-                    href: '',
-                },
-            ],
-            message: {
-                text: '',
-                type: 'success',
-                show: false
-            },
-            user: {
-                id: '',
-                img: '',
-                birth: new Date(),
-                sex: '',
-                introduction: '',
-                username: '',
-                password: '',
-                education: '',
-                isAdmin: 0
-            } as userInfo,
-            updateInfo: {
-                id: '',
-                img: '',
-                birth: new Date(),
-                sex: '',
-                introduction: '',
-                username: '',
-                password: '',
-                education: '',
-                isAdmin: 0
-            } as userInfo,
-            isEdit: false,
-            sexOptions: [
-                { label: '男', value: '男' },
-                { label: '女', value: '女' },
-            ],
-            educationOptions: [
-                { label: '小学', value: '小学' },
-                { label: '初中', value: '初中' },
-                { label: '高中', value: '高中' },
-                { label: '中专/中技', value: '中专/中技' },
-                { label: '大专', value: '大专' },
-                { label: '本科', value: '本科' },
-            ],
-            loadding: true,
-            rules: [
-                value => {
-                    return !value || !value.length || value[0].size < 2000000 || '头像必须小于2 MB!'
-                },
-            ],
-            avatar: [] as File[]
-        }
+const tab = ref(0)
+const items = ref([
+    {
+        title: '首页',
+        disabled: false,
+        href: '/',
     },
-    methods: {
-        updateUserInfoFunc() {
-            // if(this.loadding||JSON.stringify(this.user)==JSON.stringify(this.updateInfo)) return
-            this.loadding = true
-            let param = JSON.parse(JSON.stringify(this.updateInfo))
-            param.birth = this.parseDate(new Date(param.birth))
-            updateUserInfo(param).then((res: any) => {
-                if (res.code == 200) {
-                    this.message.type = 'success'
-                    this.message.text = '修改成功'
-                    this.message.show = true
-                    this.loadding = false
-                    this.isEdit = false
-                    setTimeout(() => {
-                        this.message.show = false
-                        this.$router.go(0)
-                    }, 2000);
-                } else {
-                    this.message.type = 'warning'
-                    this.message.text = res.msg
-                    this.message.show = true
-                    setTimeout(() => {
-                        this.message.show = false
-                    }, 2000);
-                }
-            })
-        },
-        parseDate(value) {
-            const year = value.getFullYear()
-            // @ts-ignore
-            const month = String(value.getMonth() + 1).padStart(2, '0')
-            const day = String(value.getDate()).padStart(2, '0')
-            const hours = String(value.getHours()).padStart(2, '0')
-            const minutes = String(value.getMinutes()).padStart(2, '0')
-            const seconds = String(value.getSeconds()).padStart(2, '0')
-            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-        },
-        edit() {
-            this.isEdit = true;
-            this.updateInfo = JSON.parse(JSON.stringify(this.user))
-            this.updateInfo.birth = new Date(this.user.birth)
-        },
-        upload() {
-            uploadAvatar(this.avatar[0]).then((res: any) => {
-
-                if (res.code == 200) {
-                    this.message.type = 'success'
-                    this.message.text = '上传成功'
-                    this.message.show = true
-                    this.updateInfo.img = res.data
-                    setTimeout(() => {
-                        this.message.show = false
-                    }, 2000);
-                } else {
-                    this.message.type = 'waring'
-                    this.message.text = res.msg
-                    this.message.show = true
-                    setTimeout(() => {
-                        this.message.show = false
-                    }, 2000);
-                }
-            })
-        },
-        getUserInfoFunc() {
-            getUserInfo().then((res: any) => {
-                if (res.code == 200) {
-                    userStore.setUser(res.data)
-                    this.user = res.data
-                }
-            })
-        }
+    {
+        title: '个人主页',
+        disabled: true,
+        href: '',
     },
-    mounted() {
-        if (!localStorage.getItem('uid')) {
-            this.$router.push('/homepage')
-            return
-        }
-        this.getUserInfoFunc()
-
+])
+const message = ref({
+    model: false,
+    timeout: 2000,
+    text: '',
+    color: '',
+    success: (text) => { message.value.text = text; message.value.color = 'rgba(76,175,80)'; message.value.model = true },
+    warning: (text) => { message.value.text = text; message.value.color = 'rgba(245,124,0)'; message.value.model = true },
+    error: (text) => { message.value.text = text; message.value.color = 'rgba(211,47,47)'; message.value.model = true }
+})
+const user = ref<userInfo>({
+    id: '',
+    img: '',
+    birth: new Date(),
+    sex: '',
+    introduction: '',
+    username: '',
+    password: '',
+    education: '',
+    isAdmin: 0
+})
+const updateInfo = ref<userInfo>({
+    id: '',
+    img: '',
+    birth: new Date(),
+    sex: '',
+    introduction: '',
+    username: '',
+    password: '',
+    education: '',
+    isAdmin: 0
+})
+const isEdit = ref(false)
+const sexOptions = ref([
+    { label: '男', value: '男' },
+    { label: '女', value: '女' },
+])
+const educationOptions = ref([
+    { label: '小学', value: '小学' },
+    { label: '初中', value: '初中' },
+    { label: '高中', value: '高中' },
+    { label: '中专/中技', value: '中专/中技' },
+    { label: '大专', value: '大专' },
+    { label: '本科', value: '本科' },
+])
+const loadding = ref(true)
+const rules = ref([
+    value => {
+        return !value || !value.length || value[0].size < 2000000 || '图片必须小于2 MB!'
     },
+])
+const avatar = ref<File[]>([])
+const updateUserInfoFunc = function () {
+    // if(this.loadding||JSON.stringify(this.user)==JSON.stringify(this.updateInfo)) return
+    loadding.value = true
+    let param = JSON.parse(JSON.stringify(updateInfo.value))
+    param.birth = parseDate(new Date(param.birth))
+    updateUserInfo(param).then((res: any) => {
+        if (res.code == 200) {
+            message.value.success("修改成功")
+            loadding.value = false
+            isEdit.value = false
+            setTimeout(() => {
+                getUserInfoFunc()
+            }, 1000);
+        } else {
+            message.value.success(res.msg)
+        }
+    })
 }
+const parseDate = function (value) {
+    const year = value.getFullYear()
+    // @ts-ignore
+    const month = String(value.getMonth() + 1).padStart(2, '0')
+    const day = String(value.getDate()).padStart(2, '0')
+    const hours = String(value.getHours()).padStart(2, '0')
+    const minutes = String(value.getMinutes()).padStart(2, '0')
+    const seconds = String(value.getSeconds()).padStart(2, '0')
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
+const edit = function () {
+    isEdit.value = true;
+    updateInfo.value = JSON.parse(JSON.stringify(user.value))
+    updateInfo.value.birth = new Date(user.value.birth)
+}
+const upload = function () {
+    uploadAvatar(avatar.value[0]).then((res: any) => {
+
+        if (res.code == 200) {
+            message.value.success("上传成功")
+            updateInfo.value.img = res.data
+        } else {
+            message.value.error(res.msg)
+        }
+    })
+}
+const getUserInfoFunc = function () {
+    getUserInfo().then((res: any) => {
+        if (res.code == 200) {
+            userStore.setUser(res.data)
+            user.value = res.data
+            user.value.sex = user.value.sex == '1' ? '男' : '女'
+        }
+    })
+}
+onMounted(() => {
+        getUserInfoFunc()
+})
 </script>
 <style scoped>
 .container {

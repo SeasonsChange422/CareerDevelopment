@@ -19,13 +19,15 @@ request.interceptors.request.use(config => {
     if(userStore==null)userStore= useUserStore()
     if (config.headers.isAuth == 'true') { // 未登录遇到需要登录的接口跳转到登录页
         if (!userStore.getUser().id) {
-            router.push('/')
+            userStore.clearUser()
+            router.push('/homepage?login=ture')
             return Promise.reject()
         }
     }
     if (config.headers.needAdmin == 'true'){
         if (userStore.getUser().isAdmin == 0){
-            router.push('/')
+            userStore.clearUser()
+            router.push('/homepage?login=ture')
             return Promise.reject()
         }
     }
@@ -39,10 +41,12 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(response => {
     const res = response.data
     if (res.code == '400' ) {
-        return Promise.reject()
+        userStore.clearUser()
+        router.push('/homepage?login=ture')
     }
     if(res.msg == '用户未登录'){
-        router.push('/')
+        userStore.clearUser()
+        router.push('/homepage?login=ture')
     }
     // 如果接口正常，直接返回数据
 

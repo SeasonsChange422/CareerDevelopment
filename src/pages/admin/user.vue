@@ -17,8 +17,7 @@
                             新增用户
                         </v-btn>
                     </template>
-
-</v-dialog> -->
+                </v-dialog> -->
             </v-toolbar>
         </template>
         <template v-slot:item.img="{ value }">
@@ -26,8 +25,7 @@
         </template>
         <template v-slot:item.isAdmin="{ value, index }">
             <p v-if="actionsIndex.editIndex != index">{{ value == 1 ? '是' : '否' }}</p>
-            <v-select v-else label="Select" v-model="updateUser.isAdmin" density="compact" :items="adminOptions"
-                variant="outlined"></v-select>
+            <v-select v-else v-model="updateItem.isAdmin" density="compact" :items="adminOptions" variant="outlined" persistent-hint single-line></v-select>
         </template>
         <template v-slot:item.actions="{ item, index }">
             <v-icon v-if="actionsIndex.editIndex != index" class="me-2" size="small" @click="editItem(index)">
@@ -36,7 +34,8 @@
             <v-icon v-if="actionsIndex.editIndex != index" size="small" @click="deleteItem(index)">
                 mdi-delete
             </v-icon>
-            <v-btn v-if="actionsIndex.editIndex == index" variant="outline" color="primary" @click="updateItemFunc">保存</v-btn>
+            <v-btn v-if="actionsIndex.editIndex == index" variant="outline" color="primary"
+                @click="updateItemFunc">保存</v-btn>
             <v-btn v-if="actionsIndex.editIndex == index" variant="outline" color="red"
                 @click="actionsIndex.editIndex = -1">取消</v-btn>
         </template>
@@ -101,8 +100,8 @@ const updateItem = ref<UserInfo>({
 })
 const items = ref<UserInfo[]>([]) // 用户列表
 const adminOptions = [ // 管理员选项
-    { label: '是', value: '1' },
-    { label: '否', value: '0' },
+    { title : '是', value: 1 },
+    { title : '否', value: 0 },
 ]
 const actionsIndex = ref({ // 当前操作的数据在数组中的索引
     deleteIndex: -1, //删除
@@ -126,12 +125,12 @@ const deleteItem = function (index: number) {
 const updateItemFunc = function () {
     updateItem.value.birth = parseDate(new Date(updateItem.value.birth))
 
-    updateUser(updateItem.value).then((res:any)=>{
-        if(res.code == 200) {
+    updateUser(updateItem.value).then((res: any) => {
+        if (res.code == 200) {
             message.value.success('更新成功')
-            setTimeout(()=>{
+            setTimeout(() => {
                 router.go(0)
-            },2000)
+            }, 2000)
         }
     })
 }

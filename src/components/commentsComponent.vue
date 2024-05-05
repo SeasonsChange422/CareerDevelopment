@@ -9,7 +9,9 @@ import { CommentVo, CommentChildrenListForm, CommentForm } from '@/api/post/post
 import { onMounted, ref } from 'vue';
 import { getChildrenCommentList, commentAdd } from '@/api/api/postApi';
 import { useUserStore } from '@/stores/user.ts'
+import { useRouter } from 'vue-router';
 const userStore = useUserStore()
+const router = useRouter()
 let props = defineProps<{
     commentList: CommentVo[]
 }>()
@@ -33,7 +35,7 @@ const addCommentForm = ref<CommentForm>({
 const sendCommentFunc = function () {
     if (disalbed.value) return
     disalbed.value = true
-    addCommentForm.value.postId = rootComments.value[0].postId
+    addCommentForm.value.postId = router.currentRoute.value.query.id as string
     delete addCommentForm.value.user
     commentAdd(addCommentForm.value).then((res: any) => {
         if (res.code == 200) {

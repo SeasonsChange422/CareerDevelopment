@@ -1,10 +1,9 @@
 <template>
-  <v-app>
+  <v-app style="background-image: url('/background.png');background-size: 100vw 100vh;">
     <v-main>
       <router-view />
     </v-main>
 
-    <AppFooter />
   </v-app>
 </template>
 

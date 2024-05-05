@@ -2,30 +2,24 @@
     <v-data-table :headers="headers" :items="items" style="min-height: 100vh;">
         <template v-slot:top>
             <v-toolbar flat>
-                <v-toolbar-title>职业</v-toolbar-title>
+                <v-toolbar-title>知识类型</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-spacer></v-spacer>
                 <v-btn class="mb-2" color="primary" dark @click="addItem">
-                    新增职业
+                    新增类型
                 </v-btn>
             </v-toolbar>
         </template>
-        <template v-slot:item.name="{ value, index }">
-            <v-text-field v-if="actionsIndex.editIndex == index" density="compact" style="transform: translate(0,20%);"
-                v-model="updateItem.name" variant="outlined"></v-text-field>
-            <div v-else>{{ value }}</div>
-        </template>
-        <template v-slot:item.img="{ value, index }">
-
+        <template v-slot:item.img="{ value,index }">
             <v-file-input v-if="actionsIndex.editIndex == index" :rules="rules" v-model="avatar"
                 accept="image/png, image/jpeg, image/bmp" label="Avatar" placeholder="Pick an avatar"
                 prepend-icon="mdi-camera" @change="upload"></v-file-input>
                 <v-img v-else :src="value" width="100" height="100"></v-img>
         </template>
-        <template v-slot:item.description="{ value, index }">
+        <template v-slot:item.name="{ value, index }">
             <v-text-field v-if="actionsIndex.editIndex == index" density="compact" style="transform: translate(0,20%);"
-                v-model="updateItem.description" variant="outlined" @click="editContent(index)"></v-text-field>
-            <div v-else v-html="value" style="overflow: hidden;max-height:60px;"></div>
+                v-model="updateItem.name" variant="outlined"></v-text-field>
+            <div v-else>{{ value }}</div>
         </template>
         <template v-slot:item.actions="{ item, index }">
             <v-icon v-if="actionsIndex.editIndex != index" class="me-2" size="small" @click="editItem(index)">
@@ -34,13 +28,10 @@
             <v-icon v-if="actionsIndex.editIndex != index" size="small" @click="deleteItem(index)">
                 mdi-delete
             </v-icon>
-            <v-icon v-if="actionsIndex.editIndex != index" size="small" @click="editQuizFunc(index)">
-                mdi-arrow-up-bold-box-outline
-            </v-icon>
             <v-btn v-if="actionsIndex.editIndex == index" variant="outline" color="primary"
                 @click="updateItemFunc">保存</v-btn>
-            <v-btn v-if="actionsIndex.editIndex == index" variant="outline" color="red" @click="cancelEdit">取消</v-btn>
-            
+            <v-btn v-if="actionsIndex.editIndex == index" variant="outline" color="red"
+                @click="actionsIndex.editIndex = -1">取消</v-btn>
         </template>
         <template v-slot:bottom>
             <div class="text-center pt-2">
@@ -57,17 +48,6 @@
             </template>
         </v-card>
     </v-dialog>
-    <v-dialog v-model="editDialog" width="auto">
-        <editorComponent :editorContent="updateItem.description"
-            :getContent="(html: string) => { updateItem.description = html }">
-        </editorComponent>
-        <template v-slot:actions>
-            <v-btn class="ms-auto" text="关闭" @click="editDialog = false"></v-btn>
-        </template>
-    </v-dialog>
-    <v-dialog v-model="editQuizDialog" width="auto">
-        <editCareerQuiz :id="items[actionsIndex.editQuizIndex].id" style="padding: 20px;"></editCareerQuiz>
-    </v-dialog>
     <v-snackbar v-model="message.model" :color="message.color" :timeout="message.timeout">
         {{ message.text }}
     </v-snackbar>
@@ -75,12 +55,10 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { updateCareer, getCareer, addCareer, getCareerList, delCareer } from '@/api/api/careerApi.ts';
-import { Career } from '@/api/type/careerType.ts'
+import { updateCulturalType, getCulturalType, addCulturalType, getCulturalTypeList, delCulturalType } from '@/api/api/culturalApi.ts';
+import { CulturalType } from '@/api/type/culturalType.ts'
 import { useRouter } from 'vue-router';
-import { useUserStore } from '@/stores/user.ts'
 import { uploadAvatar } from '../../api/api/userApi';
-const userStore = useUserStore()
 const router = useRouter()
 const message = ref({
     model: false,
@@ -91,50 +69,37 @@ const message = ref({
     warning: (text) => { message.value.text = text; message.value.color = 'rgba(245,124,0)'; message.value.model = true },
     error: (text) => { message.value.text = text; message.value.color = 'rgba(211,47,47)'; message.value.model = true }
 })
-const rules = [
-    value => {
-        return !value || !value.length || value[0].size < 2000000 || '图片必须小于2 MB!'
-    },
-]
 const avatar = ref<File[]>([])
 const headers = [ // 字段名与列名的对应关系
     { title: 'id', key: 'id' },
-    { title: '图片', key: 'img' },
-    { title: '职业', key: 'name' },
-    { title: '介绍', key: 'description' },
+    { title: '类型', key: 'name' },
+    { title: '封面', key: 'img' },
     { title: 'Actions', key: 'actions', sortable: false },
 ]
 const dialog = ref(false)
-const editDialog = ref(false)
-const addDialog = ref(false)
-const editQuizDialog = ref(false)
-const updateItem = ref<Career>({
+const updateItem = ref<CulturalType>({
     id: '',
     name: '',
     img: '',
-    description: ''
 })
-const newItem = ref<Career>({
+const newItem = ref<CulturalType>({
     id: '',
     name: '',
     img: '',
-    description: ''
 })
-const items = ref<Career[]>([]) // 用户列表
+const items = ref<CulturalType[]>([])
+
 const actionsIndex = ref({ // 当前操作的数据在数组中的索引
     deleteIndex: -1, //删除
     editIndex: -1, //编辑
-    addIndex: -1, //添加
-    editQuizIndex: - 1
+    addIndex: -1
 })
 const getListForm = ref<{
     page: number;
     limit: number;
-    type: string;
 }>({
     page: 1,
     limit: 10,
-    type: ''
 })
 const upload = function () {
     uploadAvatar(avatar.value[0]).then((res: any) => {
@@ -147,13 +112,6 @@ const upload = function () {
         }
     })
 }
-const cancelEdit = function () {
-    if (actionsIndex.value.addIndex == 0) {
-        items.value = items.value.slice(1)
-    }
-    actionsIndex.value.editIndex = -1
-    actionsIndex.value.addIndex = -1
-}
 const addItem = function () {
     if (actionsIndex.value.addIndex == 0) return
     actionsIndex.value.addIndex = 0
@@ -162,43 +120,34 @@ const addItem = function () {
 }
 const editItem = function (index: number) {
     actionsIndex.value.editIndex = index
-    updateItem.value = JSON.parse(JSON.stringify(items.value[index])) //updateItem
+    updateItem.value = JSON.parse(JSON.stringify(items.value[index])) //深拷贝到updateUser
 }
 const deleteItem = function (index: number) {
     actionsIndex.value.deleteIndex = index
     dialog.value = true
 }
-const editContent = function (index: number) {
-    editDialog.value = true
-}
-const editQuizFunc = function (index:number) {
-    editQuizDialog.value = true
-    actionsIndex.value.editQuizIndex = index
-}
 const updateItemFunc = function () {
     if (actionsIndex.value.addIndex == 0) { // 添加
-        addCareer(updateItem.value).then((res: any) => {
+        addCulturalType(updateItem.value).then((res: any) => {
             if (res.code == 200) {
                 message.value.success('添加成功')
-                setTimeout(() => {
-                    router.go(0)
-                }, 2000)
+                getItemsFunc()
             }
         })
     } else {
-        updateCareer(updateItem.value).then((res: any) => {
+        updateCulturalType(updateItem.value).then((res: any) => {
             if (res.code == 200) {
                 message.value.success('更新成功')
-                setTimeout(() => {
-                    router.go(0)
-                }, 2000)
+                getItemsFunc()
             }
         })
     }
 
 }
 const getItemsFunc = function () {
-    getCareerList(getListForm.value).then((res: any) => {
+    actionsIndex.value.editIndex = -1
+    actionsIndex.value.addIndex = -1
+    getCulturalTypeList(getListForm.value).then((res: any) => {
         if (res.code == 200) {
             items.value = res.data
         }
@@ -206,12 +155,10 @@ const getItemsFunc = function () {
 }
 const deleteItemFunc = function () {
 
-    delCareer({ id: items.value[actionsIndex.value.deleteIndex].id }).then((res: any) => {
+    delCulturalType({ id: items.value[actionsIndex.value.deleteIndex].id }).then((res: any) => {
         if (res.code == 200) {
             message.value.success('删除成功')
-            setTimeout(() => {
-                router.go(0)
-            }, 2000);
+            getItemsFunc()
         }
     })
     dialog.value = false
@@ -226,18 +173,11 @@ const parseDate = function (value) {
     const seconds = String(value.getSeconds()).padStart(2, '0')
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
-const parseDateString = function (dateString) {
-    const parts = dateString.split(/[T.:+-]/); // 使用正则表达式分割日期字符串
-    const year = parseInt(parts[0]);
-    const month = parseInt(parts[1]) - 1; // 月份是从0开始的，所以要减1
-    const day = parseInt(parts[2]);
-    const hour = parseInt(parts[3]);
-    const minute = parseInt(parts[4]);
-    const second = parseInt(parts[5]);
-
-    return new Date(Date.UTC(year, month, day, hour, minute, second)); // 使用UTC时间创建Date对象
-}
-
+const rules = [
+    value => {
+        return !value || !value.length || value[0].size < 2000000 || '图片必须小于2 MB!'
+    },
+]
 watch(() => getListForm.value.page, (newValue, oldValue) => {
     getItemsFunc()
 })

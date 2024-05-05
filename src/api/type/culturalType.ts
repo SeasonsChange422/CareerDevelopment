@@ -7,9 +7,12 @@
 export type CulturalType = {
     id: string;
     name: string;
+    img:string;
 }
 
 export type CulturalPost = {
+    id:string;
+    typeId: string;
     title: string;
     text: string;
 }

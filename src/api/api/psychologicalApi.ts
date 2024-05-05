@@ -55,3 +55,45 @@ export function getPsychologicalList(param) {
         params:param
     })
 }
+
+export function addPsychologicalTest(param) {
+    return request({
+        url: '/userApi/admin/addPsychologicalTest',
+        method: 'post',
+        params:param
+    })
+}
+
+
+export function delPsychologicalTest(param) {
+    return request({
+        url: '/userApi/admin/delPsychologicalTest',
+        method: 'delete',
+        params:param
+    })
+}
+
+
+export function updatePsychologicalTest(param) {
+    return request({
+        url: '/userApi/admin/updatePsychologicalTest',
+        method: 'post',
+        params:param
+    })
+}
+
+export function getPsychologicalTestList(param) {
+    return request({
+        url: '/userApi/admin/listPsychologicalTest',
+        method: 'get',
+        params:param
+    })
+}
+
+export function getRandomPsychologicalTest(param){
+    return request({
+        url: '/userApi/admin/randomListPsychologicalTest',
+        method: 'get',
+        params:param
+    })
+}

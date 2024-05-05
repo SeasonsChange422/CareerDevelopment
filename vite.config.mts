@@ -68,6 +68,11 @@ export default defineConfig({
       '.vue',
     ],
   },
+  optimizeDeps: {
+    include: [
+      'vue-router'
+    ]
+  },
   server: {
     port: 3000,
     proxy: {

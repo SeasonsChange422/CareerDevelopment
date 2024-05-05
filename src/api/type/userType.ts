@@ -31,3 +31,11 @@ type getUserListForm = {
     page:number;
     limit:number;
 }
+
+type Schedule = {
+    id:string;
+    time:string;
+    schedult:string;
+    notes:string;
+    status:string;
+}

@@ -1,3 +1,9 @@
+/*
+ * @Author: Dhx
+ * @Date: 2024-04-28 13:25:56
+ * @Description: 
+ * @FilePath: \CareerDevelopment\src\api\api\userApi.ts
+ */
 import request from '@/utils/request'
 
 // 登录接口
@@ -39,19 +45,36 @@ export function updateUserInfo(param){
 
 export function addSchedule(param){
     return request({
-        url: '/userApi/schedule',
-        method: 'put',
+        url: '/userApi/user/schedule',
+        method: 'post',
+        params: param,
+    })
+}
+
+export function delSchedule(param){
+    return request({
+        url: '/userApi/user/schedule',
+        method: 'delete',
         params: param,
     })
 }
 
 export function getSchedule(param) {
     return request({
-        url: '/userApi/schedule',
+        url: '/userApi/user/schedule',
         method: 'get',
         params: param
     })
 }
+
+export function updateSchedule(param) {
+    return request({
+        url: '/userApi/user/schedule',
+        method: 'put',
+        params:param
+    })
+}
+
 export function uploadAvatar(param) {
     const formData = new FormData();
     formData.append('file',param);

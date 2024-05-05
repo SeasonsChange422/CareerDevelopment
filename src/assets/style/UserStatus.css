@@ -1,16 +1,18 @@
-.login{
+.login {
     position: relative;
     height: 56px;
     margin-left: auto;
 }
-.user{
+
+.user {
     position: relative;
     height: 56px;
 }
-.btn{
+
+.btn {
     position: relative;
     top: 50%;
-    transform: translate(0,-50%);
+    transform: translate(0, -50%);
     height: 36px;
     padding: 0 14px;
     line-height: 36px;
@@ -18,26 +20,32 @@
     color: white;
     cursor: pointer;
     border-radius: 8px;
-    background-image: linear-gradient(to right,rgba(0,220,188),rgba(0,220,153));
+    background-image: linear-gradient(to right, rgba(0, 220, 188), rgba(0, 220, 153));
 }
-.btn:hover{
-    background-image: linear-gradient(to right,rgba(0,197,164),rgba(0,197,137));
+
+.btn:hover {
+    background-image: linear-gradient(to right, rgba(0, 197, 164), rgba(0, 197, 137));
 }
-.userLogin{
+
+.userLogin {
     min-height: 250px;
 }
-.v-window-item{
+
+.v-window-item {
     padding: 10px;
 }
-.avatar{
+
+.avatar {
     position: relative;
     top: 50%;
-    transform: translate(0,-50%);
+    transform: translate(0, -50%);
     cursor: pointer;
 }
-.user:hover > .userBox {
+
+.user:hover>.userBox {
     height: auto;
 }
+
 .userBox {
     position: absolute;
     height: 0;
@@ -46,6 +54,12 @@
     transform: translate(-40%);
     transition: all 0.5s;
 }
-.userBox:hover{
+
+.userBox:hover {
     height: auto;
+}
+
+a {
+    color: black !important;
+    text-decoration: none !important;
 }

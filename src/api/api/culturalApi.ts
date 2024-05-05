@@ -51,11 +51,16 @@ export function getCulturalTypeList() {
     })
 }
 
-export function addCultural(param) {
+export function addCulturalPost(param) {
+    const formData = new FormData()
+    formData.append("title",param.title)
+    formData.append("text",param.text)
+    formData.append("id",param.id)
+    formData.append("typeId",param.typeId)
     return request({
         url: '/userApi/cultural/add',
         method: 'post',
-        params:param,
+        data:formData,
         headers: {
             isAuth: 'true',
             needAdmin: 'true'
@@ -63,7 +68,7 @@ export function addCultural(param) {
     })
 }
 
-export function delCultural(param) {
+export function delCulturalPost(param) {
     return request({
         url: '/userApi/cultural/del',
         method: 'delete',
@@ -83,11 +88,16 @@ export function getCulturalById(param) {
     })
 }
 
-export function updateCultural(param) {
+export function updateCulturalPost(param) {
+    const formData = new FormData()
+    formData.append("title",param.title)
+    formData.append("text",param.text)
+    formData.append("id",param.id)
+    formData.append("typeId",param.typeId)
     return request({
         url: '/userApi/cultural/update',
         method: 'post',
-        param: param,
+        data: formData,
         headers: {
             isAuth: 'true',
             needAdmin: 'true'
@@ -95,7 +105,7 @@ export function updateCultural(param) {
     })
 }
 
-export function getCulturalList(param) {
+export function listCulturalPost(param) {
     return request({
         url: '/userApi/cultural/list',
         method: 'get',

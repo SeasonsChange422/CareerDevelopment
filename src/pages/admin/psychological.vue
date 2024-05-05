@@ -34,6 +34,9 @@
             <v-icon v-if="actionsIndex.editIndex != index" size="small" @click="deleteItem(index)">
                 mdi-delete
             </v-icon>
+            <v-icon v-if="actionsIndex.editIndex != index" size="small" @click="editTestFunc(index)">
+                mdi-arrow-up-bold-box-outline
+            </v-icon>
             <v-btn v-if="actionsIndex.editIndex == index" variant="outline" color="primary"
                 @click="updateItemFunc">保存</v-btn>
             <v-btn v-if="actionsIndex.editIndex == index" variant="outline" color="red" @click="cancelEdit">取消</v-btn>
@@ -61,6 +64,9 @@
             <v-btn class="ms-auto" text="关闭" @click="editDialog = false"></v-btn>
         </template>
     </v-dialog>
+    <v-dialog v-model="editTestDialog" width="auto">
+        <editPsychologicalTest :id="items[actionsIndex.editTestIndex].id" style="padding: 20px;"></editPsychologicalTest>
+    </v-dialog>
     <v-snackbar v-model="message.model" :color="message.color" :timeout="message.timeout">
         {{ message.text }}
     </v-snackbar>
@@ -86,7 +92,7 @@ const message = ref({
 })
 const rules = [
     value => {
-        return !value || !value.length || value[0].size < 2000000 || '头像必须小于2 MB!'
+        return !value || !value.length || value[0].size < 2000000 || '图片必须小于2 MB!'
     },
 ]
 const avatar = ref<File[]>([])
@@ -100,6 +106,7 @@ const headers = [ // 字段名与列名的对应关系
 const dialog = ref(false)
 const editDialog = ref(false)
 const addDialog = ref(false)
+const editTestDialog = ref(false)
 const updateItem = ref<Psychological>({
     id: '',
     name: '',
@@ -117,6 +124,7 @@ const actionsIndex = ref({ // 当前操作的数据在数组中的索引
     deleteIndex: -1, //删除
     editIndex: -1, //编辑
     addIndex: -1, //添加
+    editTestIndex: -1
 })
 const getListForm = ref<{
     page: number;
@@ -161,6 +169,10 @@ const deleteItem = function (index: number) {
 }
 const editContent = function (index: number) {
     editDialog.value = true
+}
+const editTestFunc = function (index:number) {
+    editTestDialog.value = true
+    actionsIndex.value.editTestIndex = index
 }
 const updateItemFunc = function () {
     if (actionsIndex.value.addIndex == 0) { // 添加

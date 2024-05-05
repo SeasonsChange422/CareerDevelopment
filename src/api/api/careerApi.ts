@@ -84,3 +84,11 @@ export function getCareerQuizList(param) {
         params:param
     })
 }
+
+export function getRandomCareerQuiz(param) {
+    return request({
+        url: '/userApi/admin/randomListCareerQuiz',
+        method: 'get',
+        params: param
+    })
+}
