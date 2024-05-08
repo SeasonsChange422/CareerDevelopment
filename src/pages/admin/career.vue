@@ -59,7 +59,7 @@
     </v-dialog>
     <v-dialog v-model="editDialog" width="auto">
         <editorComponent :editorContent="updateItem.description"
-            :getContent="(html: string) => { updateItem.description = html }">
+            :getContent="(html: string) => { updateItem.description = html }" :height="'800px'">
         </editorComponent>
         <template v-slot:actions>
             <v-btn class="ms-auto" text="关闭" @click="editDialog = false"></v-btn>

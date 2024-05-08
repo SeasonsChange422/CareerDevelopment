@@ -2,6 +2,12 @@
  * @Author: Dhx
  * @Date: 2024-05-01 17:34:25
  * @Description: 
+ * @FilePath: \CareerDevelopment\src\pages\sys\psychological.vue
+-->
+<!--
+ * @Author: Dhx
+ * @Date: 2024-05-01 17:34:25
+ * @Description: 
  * @FilePath: \CareerDevelopment\src\pages\index\psychological.vue
 -->
 <template>
@@ -14,7 +20,7 @@
             <div class="psychologicalContainer">
                 <div style="margin: 20px;" class="text-h5">心理科普</div>
                 <div class="psychologicals">
-                    <commonCard v-for="(psychological,index) in psychologicals" :item="psychological" :key="index" :path="'/details?type=psychological&id='+psychological.id"></commonCard>
+                    <commonCard v-for="(psychological,index) in psychologicals" :item="psychological" :key="index" :path="'/sys/details?type=psychological&id='+psychological.id"></commonCard>
                 </div>
                 
             </div>

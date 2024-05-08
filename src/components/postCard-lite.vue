@@ -5,7 +5,7 @@
  * @FilePath: \CareerDevelopment\src\components\postCard-lite.vue
 -->
 <template>
-    <v-card class="mx-auto" style="width: 100%;margin-top: 30px;min-height: 150px;max-height: 500px;" hover @click="$router.push((props.culturalPost.uid?'/post?id=':'/culturalPost?id=')+props.culturalPost.id)">
+    <v-card class="mx-auto" style="width: 100%;margin-top: 30px;min-height: 150px;max-height: 500px;" hover @click="$router.push((props.culturalPost.uid?'/sys/post?id=':'/sys/culturalPost?id=')+props.culturalPost.id)">
         <v-list-item
             :title="user.username"
             :subtitle="props.culturalPost.createAt"

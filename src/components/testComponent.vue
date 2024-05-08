@@ -9,8 +9,8 @@
         <v-data-iterator :items="props.items" :page="page" :items-per-page="1" style="width: 600px;height: 350px;">
             <template v-slot:default="{ items }">
                 <v-container class="pa-2" fluid>
-                    <v-row dense>
-                        <v-col v-for="item in items" :key="item.raw.id" cols="auto" md="4">
+                    <v-row style="width: 100%;">
+                        <v-col v-for="item in items" :key="item.raw.id">
                             <radio :item="item.raw" :type="props.type" :check="check"></radio>
 
                         </v-col>
@@ -67,12 +67,14 @@ const check = function (id: string, tr: boolean) {
         else calc[id]--
     }
     if(page.value <= props.items.length){
-        nextPage()
+        setTimeout(()=>{
+            nextPage()
+        },100)
     }
 }
 const result = function () {
     let max = 0
-    let maxId = ''
+    let maxId = props.items[0].careerId||props.items[0].psychologicalId
     for (let item in calc) {
         if (calc[item] > max) {
             max = calc[item]
@@ -80,10 +82,10 @@ const result = function () {
         }
     }
     if (props.type == 'career') {
-        router.push('/details?type=career&id=' + maxId)
+        router.push('/sys/details?type=career&id=' + maxId)
     }
     else if (props.type == 'psychological') {
-        router.push('/details?type=psychological&id=' + maxId)
+        router.push('/sys/details?type=psychological&id=' + maxId)
     }
 
 }

@@ -21,6 +21,17 @@
     height: 530px;
     background-color: rgba(0,0,0,0.5);
 }
+.search-title{
+    width: 300px;
+    height: 100px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    text-align: center;
+    font-size: 32px;
+    top: 140px;
+    color: white;
+}
 .search-center{
     width: 600px;
     height: 80px;
@@ -31,7 +42,7 @@
 }
 .center{
     position: relative;
-    width: 1600px;
+    width: 1200px;
     min-height: 100vh;
     margin: auto;
     padding-top: 20px;
@@ -42,10 +53,12 @@
     min-height: 150px;
     /* background-color: white; */
     border-radius: 20px;
+    /* padding: 20px; */
+}
+.typeCardContainer{
     display: flex;
     flex-wrap: wrap;
-    justify-content: left;
-    padding: 20px;
+    justify-content: flex-start;
 }
 .postsContainer{
     position: relative;

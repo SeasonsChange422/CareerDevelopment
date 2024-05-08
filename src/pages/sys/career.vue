@@ -9,7 +9,7 @@
                 <div style="margin: 20px;" class="text-h5">职业科普</div>
                 <div class="careers">
                     <commonCard v-for="(career, index) in careers" :item="career" :key="index"
-                        :path="'/details?type=career&id=' + career.id"></commonCard>
+                        :path="'/sys/details?type=career&id=' + career.id"></commonCard>
                 </div>
 
             </div>

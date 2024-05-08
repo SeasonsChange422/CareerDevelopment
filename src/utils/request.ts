@@ -31,7 +31,7 @@ request.interceptors.request.use(config => {
             return Promise.reject()
         }
     }
-    if(userStore.getUser().id) {
+    if(userStore.getUser().id&&!config.headers.uid) {
         config.headers.uid = userStore.getUser().id
     }
 

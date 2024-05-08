@@ -15,7 +15,7 @@
                 <v-text-field placeholder="标题" variant="outlined" v-model="addPostForm.title"></v-text-field>
             </div>
             <div class="bottom">
-                <editorComponent :editorContent="''" :getContent="(html:string)=>{addPostForm.content = html}"></editorComponent>
+                <editorComponent :height="'150px'" :editorContent="''" :getContent="(html:string)=>{addPostForm.content = html}"></editorComponent>
             </div>
             <div style="display: flex;justify-content: end;">
                 <v-btn variant="outlined" style="margin-top: 5px;" @click="addPostFunc">发布</v-btn>

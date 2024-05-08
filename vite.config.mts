@@ -1,3 +1,9 @@
+/*
+ * @Author: Dhx
+ * @Date: 2024-04-26 16:22:48
+ * @Description: 
+ * @FilePath: \CareerDevelopment\vite.config.mts
+ */
 // Plugins
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -74,6 +80,7 @@ export default defineConfig({
     ]
   },
   server: {
+    host: '0.0.0.0',
     port: 3000,
     proxy: {
       '/api/userApi': {

@@ -57,12 +57,12 @@
         <v-avatar class="avatar"
             :image="userStore.getUser().img ? userStore.getUser().img : '/default.jfif'"></v-avatar>
         <v-card class="mx-auto userBox">
-            <router-link to="/profile">
+            <router-link :to="'/sys/profile?id=' + userStore.getUser().id">
                 <v-btn variant="text" style="width: 100%;">
                     个人中心
                 </v-btn>
             </router-link>
-            <router-link to="/schedule">
+            <router-link to="/sys/schedule">
                 <v-btn variant="text" style="width: 100%;">
                     个人规划
                 </v-btn>
@@ -124,8 +124,12 @@ const registerForm = ref<{
 const loginFunc = function () {
     login(loginForm.value).then((res: any) => {
         if (res.code == 200) {
+            message.value.success('登录成功')
             userStore.setUser(res.data)
+            router.push('/sys/')
             // router.go(0)
+        } else {
+            message.value.error(res.msg)
         }
     })
 }

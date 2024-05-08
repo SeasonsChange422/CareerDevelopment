@@ -2,7 +2,7 @@
  * @Author: Dhx
  * @Date: 2024-05-01 17:36:07
  * @Description: 
- * @FilePath: \CareerDevelopment\src\pages\index\details.vue
+ * @FilePath: \CareerDevelopment\src\pages\sys\details.vue
 -->
 <template>
     <v-breadcrumbs :items="paths" style="width: 1200px;margin: auto;">
@@ -40,7 +40,7 @@ const paths = ref([
     {
         title: '首页',
         disabled: false,
-        href: '/',
+        href: '/sys',
     },
     {
         title: '详情',
@@ -53,10 +53,10 @@ onMounted(() => {
     id.value = router.currentRoute.value.query.id as string
     if(type.value == 'career'){
         paths.value[0].title = '职业'
-        paths.value[0].href = '/career'
+        paths.value[0].href = '/sys/career'
     } else if(type.value == 'psychological') {
         paths.value[0].title = '心理'
-        paths.value[0].href = '/psychological'
+        paths.value[0].href = '/sys/psychological'
     }
     setTimeout(() => {
         getItemFunc()

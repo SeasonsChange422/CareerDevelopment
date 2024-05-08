@@ -5,7 +5,8 @@
  * @FilePath: \CareerDevelopment\src\pages\index\culturalPosts.vue
 -->
 <template>
-    <v-infinite-scroll :item="posts" :onLoad="load">
+    <div style="background-color: rgba(239,242,249);">
+        <v-infinite-scroll :item="posts" :onLoad="load">
         <v-breadcrumbs :items="paths" style="width: 1200px;margin: auto;">
             <template v-slot:title="{ item }">
                 {{ item.title.toUpperCase() }}
@@ -13,12 +14,14 @@
         </v-breadcrumbs>
         <div class="center">
             <div class="postList">
-                <PostCardLite v-for="(post, index) in posts" :key="index" :cultural-post="post">
-                </PostCardLite>
+                <culturalPostCard v-for="(post, index) in posts" :key="index" :cultural-post="post">
+                </culturalPostCard>
             </div>
 
         </div>
     </v-infinite-scroll>
+    </div>
+    
 </template>
 <script setup lang="ts">
 import { listCulturalPost,getCulturalTypeById } from '@/api/api/culturalApi.ts'
@@ -57,7 +60,7 @@ const paths = ref([
     {
         title: '学习',
         disabled: false,
-        href: '/cultural',
+        href: '/sys/cultural',
     },
     {
         title: '',
@@ -98,8 +101,11 @@ onMounted(() => {
     width: 100%;
     min-height: 400px;
     background-color: white;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 20px;
     margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 </style>

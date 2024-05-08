@@ -2,7 +2,7 @@
  * @Author: Dhx
  * @Date: 2024-04-30 19:20:17
  * @Description: 
- * @FilePath: \CareerDevelopment\src\pages\index\culturalPost.vue
+ * @FilePath: \CareerDevelopment\src\pages\sys\culturalPost.vue
 -->
 <template>
     <v-breadcrumbs :items="paths" style="width: 1200px;margin: auto;">
@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { getCulturalById,getCulturalTypeById } from '@/api/api/culturalApi.ts'
-import { CulturalPost } from '@/api/type/culturalType.ts'
+import { CulturalPost,CulturalType } from '@/api/type/culturalType.ts'
 import { onMounted, ref } from 'vue';
 const router = useRouter()
 const post = ref<CulturalPost>({
@@ -36,12 +36,12 @@ const paths = ref([
     {
         title: '学习',
         disabled: false,
-        href: '/cultural',
+        href: '/sys/cultural',
     },
     {
         title: '',
         disabled: false,
-        href: '/',
+        href: '/sys/',
     },
     {
         title: '',
@@ -58,7 +58,7 @@ const getCulturalTypeByIdFunc = function() {
         if(res.code == 200) {
             type.value = res.data
             paths.value[1].title = type.value.name
-            paths.value[1].href = '/culturalPosts?id=' + type.value.id
+            paths.value[1].href = '/sys/culturalPosts?id=' + type.value.id
         }
     })
 }

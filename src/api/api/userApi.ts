@@ -35,6 +35,17 @@ export function getUserInfo() {
     })
 }
 
+export function getUserInfoById(param) {
+    return request({
+        url: '/userApi/user/userInfo',
+        method: 'get',
+        headers: {
+            isAuth: 'true',
+            uid:param.id
+        }
+    })
+}
+
 export function updateUserInfo(param){
     return request({
         url: '/userApi/user/userInfo/update',

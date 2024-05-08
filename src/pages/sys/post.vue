@@ -3,7 +3,7 @@
         <div class="center">
             <div class="userBox">
                 <v-card-item>
-                    <v-list-item :title="user.username" :subtitle="post.createAt"
+                    <v-list-item @click="$router.push('/sys/profile?id='+user.id)" hover :title="user.username" :subtitle="post.createAt"
                         :prepend-avatar="user.img"></v-list-item>
                 </v-card-item>
             </div>

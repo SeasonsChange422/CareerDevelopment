@@ -5,16 +5,17 @@ import ImageElement from '@wangeditor/editor';
 import { useUserStore } from '@/stores/user.ts'
 let props = defineProps<{
   editorContent: string,
-  getContent: (html: string) => void
+  getContent: (html: string) => void,
+  height: string,
 }>()
 const userStore = useUserStore()
 const editor = ref<any>(null)
 const toolbarConfig = {
   excludeKeys: [
-    "insertVideo",
-    "uploadVideo",
-    "editVideoSize",
-    "fullScreen", "codeBlock", "todo", "|", "group-video"
+    // "insertVideo",
+    // "uploadVideo",
+    // "editVideoSize",
+    "fullScreen", "codeBlock", "todo", "|",
   ]
 }
 let html = ref(props.editorContent)
@@ -25,10 +26,11 @@ const editorConfig = {
   scroll: true,
   MENU_CONF: {
     uploadImage: {
-      server: '/img/uplod',
+      server: '/api/userApi/img/upload',
       maxFileSize: 5 * 1024 * 1024,
       maxNumberOfFiles: 20,
       uploadImgFmSize: 300,
+      fieldName: 'file',
       allowedFileTypes: ['image/*'],
       meta: {},
       metaWithUrl: false,
@@ -49,14 +51,14 @@ const editorConfig = {
       // },
       customInsert(res: any) {
         const node: ImageElement = {
-              type: 'image',
-              src: res.data,
-              style: {
-                width: '30%'
-              },
-              children: [{text: ''}]
-            }
-            editor.value.insertNode(node)
+          type: 'image',
+          src: res.data,
+          style: {
+            width: '30%'
+          },
+          children: [{ text: '' }]
+        }
+        editor.value.insertNode(node)
       },
       // 单个文件上传失败
       onFailed() {   // TS 语法
@@ -66,6 +68,28 @@ const editorConfig = {
       // 上传错误，或者触发 timeout 超时
       onError() {  // TS 语法
         // onError(file, err, res) {               // JS 语法
+      },
+    },
+    uploadVideo: {
+      fieldName: 'file',
+      server: '/api/userApi/img/upload',
+      maxFileSize: 5 * 1024 * 1024, // 5M
+      maxNumberOfFiles: 1,
+      allowedFileTypes: ['video/*'],
+      headers: {
+        uid: userStore.getUser().id
+      },
+      timeout: 60 * 1000, // 15 秒
+      customInsert(res: any) {
+        const node: VideoElement = {
+          type: 'video',
+          src: res.data,
+          style: {
+            width: '80%'
+          },
+          children: [{ text: '' }]
+        }
+        editor.value.insertNode(node)
       },
     },
     color: {
@@ -94,10 +118,11 @@ onBeforeUnmount(() => {
 
 </script>
 <template>
-  <div style="border-radius:10px;border:rgba(100,100,100) 1px solid;overflow: hidden;">
+  <div style="border-radius:10px;border:rgba(100,100,100) 1px solid;overflow-y: scroll;">
     <Toolbar style="border-bottom: 1px solid #ccc;width: 100%;z-index: 10;top: 0" :editor="editor"
       :defaultConfig="toolbarConfig" :mode="mode" />
-    <Editor style="height:150px;bottom: 30px;overflow-y: scroll;" v-model="html" :defaultConfig="editorConfig" :mode="mode" @onCreated="onCreated" />
+    <Editor style="bottom: 30px;overflow-y: scroll;" v-model="html" :style="{ height: props.height }"
+      :defaultConfig="editorConfig" :mode="mode" @onCreated="onCreated" />
   </div>
 </template>
 <style src="@wangeditor/editor/dist/css/style.css"></style>

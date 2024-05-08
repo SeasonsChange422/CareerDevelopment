@@ -1,10 +1,12 @@
+<!--
+ * @Author: Dhx
+ * @Date: 2024-05-04 14:50:08
+ * @Description: 
+ * @FilePath: \CareerDevelopment\src\components\culturalTypeCard.vue
+-->
 <template>
-    <v-card class="mx-auto" min-width="344" @click="$router.push('/culturalPosts?id='+props.item.id)">
-        <v-img height="200px" :src="props.item.img" cover></v-img>
-
-        <v-card-title style="font-weight: 700;">
-            {{ props.item.name }}
-        </v-card-title>
+    <v-card style="width: 30%;" @click="$router.push('/sys/culturalPosts?id='+props.item.id)">
+        <v-img :src="props.item.img" cover></v-img>
     </v-card>
 </template>
 <script lang="ts" setup>

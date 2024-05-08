@@ -8,6 +8,7 @@ export type CulturalType = {
     id: string;
     name: string;
     img:string;
+    type: string;
 }
 
 export type CulturalPost = {
@@ -15,4 +16,5 @@ export type CulturalPost = {
     typeId: string;
     title: string;
     text: string;
+    img: string;
 }

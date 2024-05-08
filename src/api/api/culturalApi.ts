@@ -24,6 +24,14 @@ export function delCulturalType(param) {
     })
 }
 
+export function searchCulturalPost(param) {
+    return request({
+        url: '/userApi/cultural/details',
+        method: 'get',
+        params: param
+    })
+}
+
 export function getCulturalTypeById(param) {
     return request({
         url: '/userApi/cultural/type/get',
@@ -57,6 +65,7 @@ export function addCulturalPost(param) {
     formData.append("text",param.text)
     formData.append("id",param.id)
     formData.append("typeId",param.typeId)
+    formData.append("img",param.img)
     return request({
         url: '/userApi/cultural/add',
         method: 'post',
@@ -94,6 +103,7 @@ export function updateCulturalPost(param) {
     formData.append("text",param.text)
     formData.append("id",param.id)
     formData.append("typeId",param.typeId)
+    formData.append("img",param.img)
     return request({
         url: '/userApi/cultural/update',
         method: 'post',

@@ -11,7 +11,7 @@
         permanent
       >
         <v-list nav>
-          <v-list-item prepend-icon="mdi-home" title="主页" value="home" @click="$router.push('/')"></v-list-item>
+          <v-list-item prepend-icon="mdi-home" title="主页" value="home" @click="$router.push('/sys')"></v-list-item>
           <v-list-item prepend-icon="mdi-account" title="用户" value="user" @click="$router.push('/admin/user')"></v-list-item>
           <v-list-item prepend-icon="mdi-widgets" title="知识类型" value="types" @click="$router.push('/admin/type')"></v-list-item>
           <v-list-item prepend-icon="mdi-message-text" title="文化知识" value="posts" @click="$router.push('/admin/post')"></v-list-item>
@@ -32,7 +32,7 @@ const userStore = useUserStore()
 const router = useRouter()
 onMounted(()=>{
   if(userStore.getUser().isAdmin==0){
-    router.push('/posts')
+    router.push('/homepage')
   }
 })
 </script>

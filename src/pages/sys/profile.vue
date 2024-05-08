@@ -44,14 +44,18 @@
                 <p class="label text-h6" v-if="!isEdit">{{ user.username }}</p>
                 <v-text-field label="username" v-else variant="underlined" v-model="updateInfo.username"></v-text-field>
             </div>
-            <div class="row">
+            <div class="row" v-if="uid == userStore.getUser().id">
                 <p class="label text-h6">密码：</p>
                 <p class="label text-h6" v-if="!isEdit">{{ user.password }}</p>
                 <v-text-field label="password" v-else variant="underlined" v-model="updateInfo.password"></v-text-field>
             </div>
             <div class="row" style="justify-content: end;">
-                <v-btn class="btn" @click="edit" v-if="!isEdit">
+                
+                <v-btn class="btn" @click="edit" v-if="uid == userStore.getUser().id&&!isEdit">
                     编辑
+                </v-btn>
+                <v-btn class="btn" @click="chatDialog = true" v-else>
+                    私信
                 </v-btn>
                 <v-btn class="btn" v-if="isEdit" @click="isEdit = false">
                     取消
@@ -65,10 +69,13 @@
     <v-snackbar v-model="message.model" :color="message.color" :timeout="message.timeout">
         {{ message.text }}
     </v-snackbar>
+    <v-dialog v-model="chatDialog" style="width: 1000px;">
+        <chat :toUserId="uid" :key="uid"></chat>
+    </v-dialog>
 </template>
 <script lang="ts" setup>
-import { getUserInfo, updateUserInfo, uploadAvatar } from '@/api/api/userApi.ts';
-import { userInfo } from '@/api/type/userType';
+import { getUserInfoById, updateUserInfo, uploadAvatar } from '@/api/api/userApi.ts';
+import { UserInfo } from '@/api/type/userType';
 import { useUserStore } from '@/stores/user.ts'
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router'
@@ -96,7 +103,8 @@ const message = ref({
     warning: (text) => { message.value.text = text; message.value.color = 'rgba(245,124,0)'; message.value.model = true },
     error: (text) => { message.value.text = text; message.value.color = 'rgba(211,47,47)'; message.value.model = true }
 })
-const user = ref<userInfo>({
+const uid = ref('')
+const user = ref<UserInfo>({
     id: '',
     img: '',
     birth: new Date(),
@@ -107,7 +115,7 @@ const user = ref<userInfo>({
     education: '',
     isAdmin: 0
 })
-const updateInfo = ref<userInfo>({
+const updateInfo = ref<UserInfo>({
     id: '',
     img: '',
     birth: new Date(),
@@ -132,6 +140,7 @@ const educationOptions = ref([
     { label: '本科', value: '本科' },
 ])
 const loadding = ref(true)
+const chatDialog = ref(false)
 const rules = ref([
     value => {
         return !value || !value.length || value[0].size < 2000000 || '图片必须小于2 MB!'
@@ -182,18 +191,19 @@ const upload = function () {
         }
     })
 }
+onMounted(() => {
+    setTimeout(() => {
+        uid.value = router.currentRoute.value.query.id as string
+        getUserInfoFunc()
+    }, 500);
+
+})
 const getUserInfoFunc = function () {
-    getUserInfo().then((res: any) => {
-        if (res.code == 200) {
-            userStore.setUser(res.data)
-            user.value = res.data
+    userStore.getUserByIdFunc(uid.value).then((res: any) => {
+            user.value = res
             user.value.sex = user.value.sex == '1' ? '男' : '女'
-        }
     })
 }
-onMounted(() => {
-        getUserInfoFunc()
-})
 </script>
 <style scoped>
 .container {

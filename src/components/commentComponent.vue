@@ -84,15 +84,15 @@ const handleBlur2 = function () {
   <div style="width: 100%;position: relative;display: flex;justify-content: right;">
     <div :class="commentStyle">
       <div class="comment-left">
-          <div class="avatar-border">
-            <img height="40" width="40" style="object-fit: cover;overflow: hidden;" :src="currentComment?.user?.img!"
-              alt="commenter-avatar">
-          </div>
+        <div class="avatar-border">
+          <img height="40" width="40" style="object-fit: cover;overflow: hidden;cursor: pointer;" @click="$router.push('/sys/profile?id='+currentComment.user.id)" :src="currentComment?.user?.img!"
+            alt="commenter-avatar">
+        </div>
       </div>
       <div class="comment-right">
-          <div class="commenter-nickName">
-            {{ currentComment?.user?.username }}
-          </div>
+        <div class="commenter-nickName" @click="$router.push('/sys/profile?id='+currentComment.user.id)" >
+          {{ currentComment?.user?.username }}
+        </div>
 
         <div class="comment-content">
           <span
@@ -115,7 +115,7 @@ const handleBlur2 = function () {
           </span>
         </div>
         <div v-show="inputVisibility" class="reply">
-          <span style="font-family: 'ZCool';">@{{ currentComment.user?.usernmae }}:</span>
+          <span style="font-family: 'ZCool';">@{{ currentComment.user?.username }}:</span>
           <input class="input" placeholder="" v-model="inputContent" @blur="handleBlur" ref="input">
           <div style="width: 30px;height: 30px;">
             <!-- <recordingComponnent :getUrl="getUrl"></recordingComponnent> -->

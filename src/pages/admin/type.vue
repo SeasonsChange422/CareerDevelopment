@@ -1,5 +1,5 @@
 <template>
-    <v-data-table :headers="headers" :items="items" style="min-height: 100vh;">
+    <v-data-table :headers="headers" :items="items.slice((getListForm.page - 1)*10,getListForm.page*10)" style="min-height: 100vh;">
         <template v-slot:top>
             <v-toolbar flat>
                 <v-toolbar-title>知识类型</v-toolbar-title>
@@ -15,6 +15,11 @@
                 accept="image/png, image/jpeg, image/bmp" label="Avatar" placeholder="Pick an avatar"
                 prepend-icon="mdi-camera" @change="upload"></v-file-input>
                 <v-img v-else :src="value" width="100" height="100"></v-img>
+        </template>
+        <template v-slot:item.type="{ value, index }">
+            <v-text-field v-if="actionsIndex.editIndex == index" density="compact" style="transform: translate(0,20%);"
+                v-model="updateItem.type" variant="outlined"></v-text-field>
+            <div v-else>{{ value }}</div>
         </template>
         <template v-slot:item.name="{ value, index }">
             <v-text-field v-if="actionsIndex.editIndex == index" density="compact" style="transform: translate(0,20%);"
@@ -36,7 +41,7 @@
         <template v-slot:bottom>
             <div class="text-center pt-2">
                 <v-pagination v-model="getListForm.page"
-                    :length="getListForm.limit == items.length ? getListForm.page + 1 : getListForm.page"></v-pagination>
+                    :length="items.length/getListForm.limit+1"></v-pagination>
             </div>
         </template>
     </v-data-table>
@@ -72,6 +77,7 @@ const message = ref({
 const avatar = ref<File[]>([])
 const headers = [ // 字段名与列名的对应关系
     { title: 'id', key: 'id' },
+    { title: '模块', key: 'type' },
     { title: '类型', key: 'name' },
     { title: '封面', key: 'img' },
     { title: 'Actions', key: 'actions', sortable: false },
@@ -81,11 +87,13 @@ const updateItem = ref<CulturalType>({
     id: '',
     name: '',
     img: '',
+    type: ''
 })
 const newItem = ref<CulturalType>({
     id: '',
     name: '',
     img: '',
+    type: ''
 })
 const items = ref<CulturalType[]>([])
 

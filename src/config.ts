@@ -27,5 +27,13 @@ export default {
                 text: '引导学生通过完成测评来检验自己的生涯规划进展情况，帮助学生及时把握和调整未来的行动方向，针对相对薄弱的环节深入探索。'
             }
         ]
+    },
+    cultural: {
+        carouselImg: [
+            "/carousel1.png",
+            "/carousel2.png",
+            "/carousel3.png",
+            "/carousel4.png"
+        ]
     }
 }

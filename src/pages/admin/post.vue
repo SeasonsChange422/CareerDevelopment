@@ -24,6 +24,13 @@
             </div>
             <div v-else>{{ getTypeName(value) }}</div>
         </template>
+        <template v-slot:item.img="{ value, index }">
+
+            <v-file-input v-if="actionsIndex.editIndex == index" :rules="rules" v-model="avatar"
+                accept="image/png, image/jpeg, image/bmp" label="Avatar" placeholder="Pick an avatar"
+                prepend-icon="mdi-camera" @change="upload"></v-file-input>
+            <v-img v-else :src="value" width="100" height="100"></v-img>
+        </template>
         <template v-slot:item.text="{ value, index }">
             <v-text-field v-if="actionsIndex.editIndex == index" density="compact" style="transform: translate(0,20%);"
                 v-model="updateItem.text" variant="outlined" @click="editContent(index)"></v-text-field>
@@ -56,7 +63,8 @@
         </v-card>
     </v-dialog>
     <v-dialog v-model="editDialog" width="auto">
-        <editorComponent :editorContent="updateItem.text" :getContent="(html: string) => { updateItem.text = html }">
+        <editorComponent :editorContent="updateItem.text" :getContent="(html: string) => { updateItem.text = html }"
+            :height="'800px'">
         </editorComponent>
         <template v-slot:actions>
             <v-btn class="ms-auto" text="关闭" @click="editDialog = false"></v-btn>
@@ -73,6 +81,7 @@ import { updateCulturalPost, getCulturalPost, addCulturalPost, listCulturalPost,
 import { CulturalPost, CulturalType } from '@/api/type/culturalType.ts'
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user.ts'
+import { uploadAvatar } from '../../api/api/userApi';
 const userStore = useUserStore()
 const router = useRouter()
 const message = ref({
@@ -84,9 +93,27 @@ const message = ref({
     warning: (text) => { message.value.text = text; message.value.color = 'rgba(245,124,0)'; message.value.model = true },
     error: (text) => { message.value.text = text; message.value.color = 'rgba(211,47,47)'; message.value.model = true }
 })
+const rules = [
+    value => {
+        return !value || !value.length || value[0].size < 2000000 || '图片必须小于2 MB!'
+    },
+]
+const avatar = ref<File[]>([])
+const upload = function () {
+    uploadAvatar(avatar.value[0]).then((res: any) => {
+
+        if (res.code == 200) {
+            updateItem.value.img = res.data
+            message.value.success('上传成功')
+        } else {
+            message.value.error(res.msg)
+        }
+    })
+}
 const headers = [ // 字段名与列名的对应关系
     { title: 'id', key: 'id' },
     { title: '类型', key: 'typeId' },
+    { title: '封面', key: 'img' },
     { title: '标题', key: 'title' },
     { title: '内容', key: 'text' },
     // { title: '浏览量', key: 'watchNum' },
@@ -104,12 +131,14 @@ const updateItem = ref<CulturalPost>({
     typeId: '',
     title: '',
     text: '',
+    img: '',
 })
 const newItem = ref<CulturalPost>({
     id: '',
     typeId: '',
     title: '',
     text: '',
+    img: '',
 })
 const items = ref<CulturalPost[]>([])
 const actionsIndex = ref({ // 当前操作的数据在数组中的索引
@@ -155,6 +184,13 @@ const updateItemFunc = function () {
     if (actionsIndex.value.addIndex == 0) { // 添加
         addCulturalPost(updateItem.value).then((res: any) => {
             message.value.success('添加成功')
+            updateItem.value = {
+                id: '',
+                typeId: '',
+                title: '',
+                text: '',
+                img: '',
+            }
             getItemsFunc()
         })
     } else {
@@ -162,6 +198,13 @@ const updateItemFunc = function () {
             updateItem.value.createAt = parseDate(new Date(parseDateString(updateItem.value.createAt)))
         updateCulturalPost(updateItem.value).then((res: any) => {
             message.value.success('更新成功')
+            updateItem.value = {
+                id: '',
+                typeId: '',
+                title: '',
+                text: '',
+                img: '',
+            }
             getItemsFunc()
         })
     }
