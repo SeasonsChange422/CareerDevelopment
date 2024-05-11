@@ -2,7 +2,7 @@
  * @Author: Dhx
  * @Date: 2024-04-26 16:22:48
  * @Description: 
- * @FilePath: \CareerDevelopment\src\pages\index.vue
+ * @FilePath: \CareerDevelopment\src\pages\sys.vue
 -->
 <template>
   <AppHeader/>
@@ -19,7 +19,7 @@ import {useRouter} from 'vue-router'
 const router = useRouter()
 onMounted(()=>{
   if(router.currentRoute.value.path=='/')
-    router.push('/homepage')
+    router.push('/posts')
 })
   //
 </script>

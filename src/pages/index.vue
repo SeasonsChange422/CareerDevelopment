@@ -1,9 +1,11 @@
+<!--
+ * @Author: Dhx
+ * @Date: 2024-04-26 16:22:48
+ * @Description: 
+ * @FilePath: \CareerDevelopment\src\pages\index.vue
+-->
 <template>
-    <div class="login" v-if="!userStore.getUser().id">
-        <div class="btn" @click="loginDialog = true">
-            登录 / 注册
-        </div>
-        <v-dialog style="border-radius: 10px;" max-width="500" v-model="loginDialog">
+    <v-dialog style="border-radius: 10px;" max-width="500" v-model="loginDialog">
             <v-card>
 
                 <div class="userLogin">
@@ -52,35 +54,34 @@
 
             </v-card>
         </v-dialog>
+    <div class="picContainer">
+        <div class="center">
+            <div class="logo">
+                <img :src="'/favicon.ico'">
+            </div>
+            <div class="title">
+                智慧社区青少年文化教育服务系统
+            </div>
+            <div class="login">
+                <div>
+                    <v-btn v-if="!userStore.getUser().id" variant="flat" color="blue-darken-4" @click="loginDialog=true">立即登录</v-btn>
+                    <v-btn v-else variant="flat" color="blue-darken-4" @click="$router.push('/sys')">进入系统</v-btn>
+                </div>
+                
+            </div>
+        </div>
     </div>
-    <v-dialog v-model="chatDialog" style="width: 1200px;">
-            <chatWindow></chatWindow>
-        </v-dialog>
-    <v-icon v-if="userStore.getUser().id" color="black" icon="mdi-email" size="large" @click="chatDialog = true"
-        style="position: relative;cursor: pointer;line-height: 56px;margin-left: auto;margin-right: 30px;top: 50%;transform: translate(0,-50%);"></v-icon>
-    <div class="user" v-if="userStore.getUser().id">
-        <v-avatar class="avatar"
-            :image="userStore.getUser().img ? userStore.getUser().img : '/default.jfif'"></v-avatar>
-        <v-card class="mx-auto userBox">
-            <router-link :to="'/sys/profile?id=' + userStore.getUser().id">
-                <v-btn variant="text" style="width: 100%;">
-                    个人中心
-                </v-btn>
-            </router-link>
-            <router-link to="/sys/schedule">
-                <v-btn variant="text" style="width: 100%;">
-                    个人规划
-                </v-btn>
-            </router-link>
-            <router-link to="/admin">
-                <v-btn variant="text" style="width: 100%;" v-if="userStore.getUser().isAdmin == '1'">
-                    管理员端
-                </v-btn>
-            </router-link>
+    <div class="contentContainer">
+        <v-card variant="outlined" v-for="(item,index) in homepageConfig.items" max-width="210" :key="index" style="padding: 10px;border: rgb(212,212,212) 1px solid;">
+            <div style="position: relative;height: 160px;width:160px;border-radius: 80px;background-size: cover;background-position: center center;left: 50%;transform: translate(-50%);" :style="{backgroundImage:`url(${item.img})`}">
 
-            <v-btn variant="text" style="width: 100%;" @click="logout">
-                退出登录
-            </v-btn>
+            </div>
+            <div style="text-align: center;font-size: 18px;margin-top: 20px;">
+                {{ item.title }}
+            </div>
+            <div style="font-size: 16px;margin-top: 10px;">
+                {{ item.text }}
+            </div>
         </v-card>
     </div>
     <v-snackbar v-model="message.model" :color="message.color" :timeout="message.timeout">
@@ -88,12 +89,16 @@
     </v-snackbar>
 </template>
 <script lang="ts" setup>
+import {useUserStore} from "@/stores/user.ts"
 import { login, register } from '@/api/api/userApi.ts'
-import { onMounted, ref, watch } from 'vue';
+import config from "@/config.ts"
 import { useRouter } from 'vue-router';
-import { useUserStore } from '@/stores/user.ts'
-import { getUserInfo } from '../api/api/userApi';
+import { ref } from "vue";
 const router = useRouter()
+const userStore = useUserStore()
+const homepageConfig = ref(config.homepage)
+const loginDialog = ref(false)
+const tab1 = ref(0)
 const message = ref({
     model: false,
     timeout: 2000,
@@ -103,12 +108,6 @@ const message = ref({
     warning: (text) => { message.value.text = text; message.value.color = 'rgba(245,124,0)'; message.value.model = true },
     error: (text) => { message.value.text = text; message.value.color = 'rgba(211,47,47)'; message.value.model = true }
 })
-const loginDialog = ref(false)
-const chatDialog = ref(false)
-const tab = ref(0)
-const tab1 = ref(0)
-const userStore = useUserStore()
-// 登录表单
 const loginForm = ref<{
     username: string;
     password: string;
@@ -116,7 +115,6 @@ const loginForm = ref<{
     username: '',
     password: ''
 })
-// 注册表单
 const registerForm = ref<{
     username: string;
     password: string;
@@ -124,7 +122,6 @@ const registerForm = ref<{
     username: '',
     password: ''
 })
-// 登录
 const loginFunc = function () {
     login(loginForm.value).then((res: any) => {
         if (res.code == 200) {
@@ -137,7 +134,6 @@ const loginFunc = function () {
         }
     })
 }
-// 注册
 const registerFunc = function () {
     register(registerForm.value).then((res: any) => {
         if (res.code == 200) {
@@ -148,16 +144,78 @@ const registerFunc = function () {
         }
     })
 }
-// 登出
-const logout = function () {
-    userStore.clearUser()
-}
-onMounted(() => {
-    if (router.currentRoute.value.query.login) {
-        loginDialog.value = true
-    }
-})
 </script>
 <style scoped>
-@import url('/src/assets/style/UserStatus.css');
+.picContainer{
+    position: relative;
+    width: 100%;
+    height: 500px;
+    background-image: url('/school.png');
+    background-size:cover;
+    background-position:center center;
+}
+.center{
+    position: absolute;
+    height: 100%;
+    width: 400px;
+    left: 50%;
+    background-color: rgba(255,255,255,0.9);
+    transform: translate(-50%);
+}
+.title {
+    height: 100px;
+    line-height: 100px;
+    font-size: 24px;
+    font-family: '黑体';
+    text-align: center;
+}
+.logo{
+    position: relative;
+    height: 200px;
+    width: 100%;
+}
+.logo img{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+.login{
+    position: relative;
+    height: 150px;
+    width: 100%;
+}
+.login div{ 
+    position: relative;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+    transform: translate(-50%,-50%);
+}
+.contentContainer{
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: nowrap;
+}
+.userLogin {
+    min-height: 250px;
+}
+.btn {
+    position: relative;
+    top: 50%;
+    transform: translate(0, -50%);
+    height: 36px;
+    padding: 0 14px;
+    line-height: 36px;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    background-image: linear-gradient(to right, rgba(0, 220, 188), rgba(0, 220, 153));
+}
+
+.btn:hover {
+    background-image: linear-gradient(to right, rgba(0, 197, 164), rgba(0, 197, 137));
+}
 </style>

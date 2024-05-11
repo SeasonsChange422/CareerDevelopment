@@ -99,3 +99,10 @@ export function uploadAvatar(param) {
         }
     })
 }
+
+export function getFriends() {
+    return request({
+        url: '/userApi/user/friends',
+        method: 'get',
+    })
+}

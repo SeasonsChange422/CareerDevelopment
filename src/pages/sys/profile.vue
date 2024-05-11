@@ -136,8 +136,6 @@ const educationOptions = ref([
     { label: '初中', value: '初中' },
     { label: '高中', value: '高中' },
     { label: '中专/中技', value: '中专/中技' },
-    { label: '大专', value: '大专' },
-    { label: '本科', value: '本科' },
 ])
 const loadding = ref(true)
 const chatDialog = ref(false)

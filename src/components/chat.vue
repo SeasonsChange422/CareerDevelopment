@@ -1,5 +1,5 @@
 <template>
-    <v-card style="height: 900px;width: 1000px;position: relative;left: 50%;transform: translate(-50%);">
+    <v-card style="height: 900px;width: 1000px;position: relative;left: 50%;transform: translate(-50%);border-radius: 0px;">
         <div style="position:relative;height:  50px;width: 100%;background-color: black;color: white;text-align: center;line-height: 50px;font-size: 18px;">
             <span>{{ chatUser.username }}</span>
         </div>
@@ -19,7 +19,7 @@
     </v-card>
 </template>
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { Message } from '@/api/type/chatType.ts'
 import { UserInfo } from '@/api/type/userType';
 import { chatList, addChat } from '@/api/api/chatApi.ts'
@@ -100,15 +100,18 @@ const getChatUserInfo = function() {
     })
     
 }
+let timerId:any = {}
 onMounted(() => {
     getChatListForm.value.toUserId = props.toUserId
     addChatForm.value.toUserId = props.toUserId
     getChatListFunc()
     getChatUserInfo()
-    setInterval(() => {
+    timerId = setInterval(() => {
         getChatListFunc()
-        
     }, 3000)
+})
+onBeforeUnmount(()=>{
+    clearInterval(timerId)
 })
 </script>
 <style scoped></style>

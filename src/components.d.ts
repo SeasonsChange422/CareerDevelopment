@@ -12,6 +12,7 @@ declare module 'vue' {
     AppHeader: typeof import('./components/AppHeader.vue')['default']
     CareerCard: typeof import('./components/careerCard.vue')['default']
     Chat: typeof import('./components/chat.vue')['default']
+    ChatWindow: typeof import('./components/chatWindow.vue')['default']
     CommentComponent: typeof import('./components/commentComponent.vue')['default']
     CommentsComponent: typeof import('./components/commentsComponent.vue')['default']
     CommonCard: typeof import('./components/commonCard.vue')['default']

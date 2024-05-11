@@ -73,7 +73,7 @@ const editorConfig = {
     uploadVideo: {
       fieldName: 'file',
       server: '/api/userApi/img/upload',
-      maxFileSize: 5 * 1024 * 1024, // 5M
+      maxFileSize: 2 * 1024 * 1024 * 1024, // 5M
       maxNumberOfFiles: 1,
       allowedFileTypes: ['video/*'],
       headers: {

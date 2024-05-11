@@ -32,7 +32,7 @@ const userStore = useUserStore()
 const router = useRouter()
 onMounted(()=>{
   if(userStore.getUser().isAdmin==0){
-    router.push('/homepage')
+    router.push('/')
   }
 })
 </script>
